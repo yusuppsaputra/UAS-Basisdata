@@ -54,7 +54,11 @@ return [
     'entities' => [
         'pages' => true,
         'widgets' => true,
-        'resources' => true,
+        // Disable resource-level protection so panel resources are accessible
+        // by users according to Laravel/Filament defaults and not intercepted
+        // by Filament Shield. This prevents unexpected `403 Forbidden` for
+        // users who already have standard 'view' permissions.
+        'resources' => false,
         'custom_permissions' => false,
     ],
 

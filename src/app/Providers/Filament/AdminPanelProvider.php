@@ -53,6 +53,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 NavigationGroup::make()
+                    ->label('Hospital Management'),
+                NavigationGroup::make()
+                    ->label('Settings'),
+                NavigationGroup::make()
                     ->label('Administration'),
             ])
             ->userMenuItems([

@@ -10,135 +10,19 @@ use App\Models\Pasien;
 use App\Models\Poliklinik;
 use App\Models\Resep;
 use App\Models\RumahSakit;
-use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
-class DatabaseSeeder extends Seeder
+class HospitalSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      */
     public function run(): void
     {
-        // Create roles and permissions
-        $this->createRolesAndPermissions();
-
-        // Create users
-        $this->createUsers();
-
-        // Create hospital data
-        $this->createHospitalData();
-
-        $this->command->info('✅ Database seeding completed successfully!');
-        $this->printStats();
-    }
-
-    /**
-     * Create roles and permissions
-     */
-    private function createRolesAndPermissions(): void
-    {
-        $this->command->info('📋 Creating roles and permissions...');
-
-        // Create permissions
-        $permissions = [
-            'view_users', 'create_users', 'edit_users', 'delete_users',
-            'view_rumah_sakit', 'create_rumah_sakit', 'edit_rumah_sakit', 'delete_rumah_sakit',
-            'view_poliklinik', 'create_poliklinik', 'edit_poliklinik', 'delete_poliklinik',
-            'view_dokter', 'create_dokter', 'edit_dokter', 'delete_dokter',
-            'view_pasien', 'create_pasien', 'edit_pasien', 'delete_pasien',
-            'view_obat', 'create_obat', 'edit_obat', 'delete_obat',
-            'view_jadwal_praktek', 'create_jadwal_praktek', 'edit_jadwal_praktek', 'delete_jadwal_praktek',
-            'view_kunjungan', 'create_kunjungan', 'edit_kunjungan', 'delete_kunjungan',
-            'view_resep', 'create_resep', 'edit_resep', 'delete_resep',
-        ];
-
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
-        }
-
-        // Create roles
-        $superAdminRole = Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
-        $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
-        $userRole = Role::firstOrCreate(['name' => 'user', 'guard_name' => 'web']);
-        $doctorRole = Role::firstOrCreate(['name' => 'doctor', 'guard_name' => 'web']);
-
-        // Assign permissions to roles
-        $superAdminRole->syncPermissions($permissions);
-        
-        $adminPermissions = array_filter($permissions, fn($p) => !str_starts_with($p, 'view_users'));
-        $adminRole->syncPermissions($adminPermissions);
-        
-        $userPermissions = array_filter($permissions, fn($p) => str_starts_with($p, 'view_'));
-        $userRole->syncPermissions($userPermissions);
-        
-        $doctorPermissions = ['view_dokter', 'view_jadwal_praktek', 'view_kunjungan', 'edit_kunjungan', 'view_resep', 'create_resep', 'edit_resep'];
-        $doctorRole->syncPermissions($doctorPermissions);
-
-        $this->command->info('✓ Roles and permissions created');
-    }
-
-    /**
-     * Create users
-     */
-    private function createUsers(): void
-    {
-        $this->command->info('👥 Creating users...');
-
-        // Super Admin
-        $superAdmin = User::firstOrCreate(
-            ['email' => 'superadmin@rumahsakit.com'],
-            [
-                'name' => 'Super Administrator',
-                'password' => Hash::make('password123'),
-                'avatar_url' => 'https://ui-avatars.com/api/?name=Super+Admin&background=4F46E5&color=fff',
-            ]
-        );
-        $superAdmin->assignRole('super_admin');
-
-        // Admin
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@rumahsakit.com'],
-            [
-                'name' => 'Administrator',
-                'password' => Hash::make('password123'),
-                'avatar_url' => 'https://ui-avatars.com/api/?name=Admin&background=0EA5E9&color=fff',
-            ]
-        );
-        $admin->assignRole('admin');
-
-        // Regular Users
-        $users = [
-            ['name' => 'Staff Umum 1', 'email' => 'staff1@rumahsakit.com', 'role' => 'user', 'avatar_url' => 'https://ui-avatars.com/api/?name=Staff+1&background=8B5CF6&color=fff'],
-            ['name' => 'Staff Umum 2', 'email' => 'staff2@rumahsakit.com', 'role' => 'user', 'avatar_url' => 'https://ui-avatars.com/api/?name=Staff+2&background=EC4899&color=fff'],
-        ];
-
-        foreach ($users as $userData) {
-            $user = User::firstOrCreate(
-                ['email' => $userData['email']],
-                [
-                    'name' => $userData['name'],
-                    'password' => Hash::make('password123'),
-                    'avatar_url' => $userData['avatar_url'],
-                ]
-            );
-            $user->assignRole($userData['role']);
-        }
-
-        $this->command->info('✓ Users created');
-    }
-
-    /**
-     * Create hospital data
-     */
-    private function createHospitalData(): void
-    {
-        $this->command->info('🏥 Creating hospital data...');
-
-        // RUMAH SAKIT
+        // =====================================================
+        // 1. SEED RUMAH_SAKIT (10 records)
+        // =====================================================
         RumahSakit::insert([
             ['nama' => 'RS Pusat Medika Jaya', 'alamat' => 'Jl. Gatot Subroto No. 1', 'kota' => 'Jakarta', 'provinsi' => 'DKI Jakarta', 'no_telepon' => '021-1234567', 'kelas_rumah_sakit' => 'A', 'created_at' => now(), 'updated_at' => now()],
             ['nama' => 'RS Klinik Cahaya Sehat', 'alamat' => 'Jl. Sudirman No. 45', 'kota' => 'Bandung', 'provinsi' => 'Jawa Barat', 'no_telepon' => '022-2345678', 'kelas_rumah_sakit' => 'B', 'created_at' => now(), 'updated_at' => now()],
@@ -152,7 +36,9 @@ class DatabaseSeeder extends Seeder
             ['nama' => 'RS Bintang Sehat', 'alamat' => 'Jl. Veteran No. 67', 'kota' => 'Jakarta', 'provinsi' => 'DKI Jakarta', 'no_telepon' => '021-0123456', 'kelas_rumah_sakit' => 'A', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        // POLIKLINIK
+        // =====================================================
+        // 2. SEED POLIKLINIK (12 records)
+        // =====================================================
         Poliklinik::insert([
             ['id_rumahsakit' => 1, 'nama_poli' => 'Poli Umum', 'lantai' => 2, 'jam_operasional' => '08:00-17:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_rumahsakit' => 1, 'nama_poli' => 'Poli Jantung', 'lantai' => 3, 'jam_operasional' => '08:00-15:00', 'created_at' => now(), 'updated_at' => now()],
@@ -168,7 +54,9 @@ class DatabaseSeeder extends Seeder
             ['id_rumahsakit' => 6, 'nama_poli' => 'Poli Umum', 'lantai' => 1, 'jam_operasional' => '08:00-17:00', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        // DOKTER
+        // =====================================================
+        // 3. SEED DOKTER (15 records)
+        // =====================================================
         Dokter::insert([
             ['id_rumahsakit' => 1, 'id_poli' => 1, 'nama_dokter' => 'Dr. Ahmad Wijaya', 'spesialisasi' => 'Umum', 'no_str' => 'STR001-2023', 'no_telepon' => '0812-1234567', 'created_at' => now(), 'updated_at' => now()],
             ['id_rumahsakit' => 1, 'id_poli' => 2, 'nama_dokter' => 'Dr. Budi Santoso', 'spesialisasi' => 'Jantung', 'no_str' => 'STR002-2023', 'no_telepon' => '0812-2345678', 'created_at' => now(), 'updated_at' => now()],
@@ -187,7 +75,9 @@ class DatabaseSeeder extends Seeder
             ['id_rumahsakit' => 3, 'id_poli' => 7, 'nama_dokter' => 'Dr. Wahyu Santoso', 'spesialisasi' => 'Umum', 'no_str' => 'STR015-2023', 'no_telepon' => '0813-5678901', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        // PASIEN
+        // =====================================================
+        // 4. SEED PASIEN (15 records)
+        // =====================================================
         Pasien::insert([
             ['nik' => '3201012345678901', 'nama' => 'Ahmad Suryanto', 'jenis_kelamin' => 'Laki-laki', 'tanggal_lahir' => '1985-03-15', 'alamat' => 'Jl. Merdeka No. 10, Jakarta', 'no_telepon' => '0811-1111111', 'golongan_darah' => 'O', 'alergi' => 'Amoxicillin', 'created_at' => now(), 'updated_at' => now()],
             ['nik' => '3204067890123456', 'nama' => 'Siti Nurhaliza', 'jenis_kelamin' => 'Perempuan', 'tanggal_lahir' => '1990-06-22', 'alamat' => 'Jl. Sudirman No. 25, Bandung', 'no_telepon' => '0812-2222222', 'golongan_darah' => 'A', 'alergi' => 'Aspirin', 'created_at' => now(), 'updated_at' => now()],
@@ -206,7 +96,9 @@ class DatabaseSeeder extends Seeder
             ['nik' => '2201089876543210', 'nama' => 'Doni Hermawan', 'jenis_kelamin' => 'Laki-laki', 'tanggal_lahir' => '1987-06-19', 'alamat' => 'Jl. Gatot Subroto No. 33, Jakarta', 'no_telepon' => '0825-5555555', 'golongan_darah' => 'AB', 'alergi' => null, 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        // OBAT
+        // =====================================================
+        // 5. SEED OBAT (12 records)
+        // =====================================================
         Obat::insert([
             ['nama_obat' => 'Amoxicillin 500mg', 'kategori' => 'Antibiotik', 'satuan' => 'Tablet', 'stok' => 500, 'harga' => 5000.00, 'created_at' => now(), 'updated_at' => now()],
             ['nama_obat' => 'Paracetamol 500mg', 'kategori' => 'Analgesik', 'satuan' => 'Tablet', 'stok' => 1000, 'harga' => 2500.00, 'created_at' => now(), 'updated_at' => now()],
@@ -222,31 +114,51 @@ class DatabaseSeeder extends Seeder
             ['nama_obat' => 'Diclofenac 50mg', 'kategori' => 'NSAID', 'satuan' => 'Tablet', 'stok' => 450, 'harga' => 4000.00, 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        // JADWAL PRAKTEK
+        // =====================================================
+        // 6. SEED JADWAL_PRAKTEK (20 records)
+        // =====================================================
         JadwalPraktek::insert([
+            // Dr. Ahmad Wijaya (ID: 1)
             ['id_dokter' => 1, 'hari' => 'Senin', 'jam_mulai' => '08:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 1, 'hari' => 'Rabu', 'jam_mulai' => '14:00:00', 'jam_selesai' => '17:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 1, 'hari' => 'Jumat', 'jam_mulai' => '08:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Dr. Budi Santoso (ID: 2)
             ['id_dokter' => 2, 'hari' => 'Selasa', 'jam_mulai' => '08:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 2, 'hari' => 'Kamis', 'jam_mulai' => '13:00:00', 'jam_selesai' => '15:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 2, 'hari' => 'Sabtu', 'jam_mulai' => '09:00:00', 'jam_selesai' => '13:00:00', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Dr. Siti Nurhaliza (ID: 3)
             ['id_dokter' => 3, 'hari' => 'Senin', 'jam_mulai' => '09:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 3, 'hari' => 'Selasa', 'jam_mulai' => '14:00:00', 'jam_selesai' => '17:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 3, 'hari' => 'Kamis', 'jam_mulai' => '09:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 3, 'hari' => 'Jumat', 'jam_mulai' => '14:00:00', 'jam_selesai' => '17:00:00', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Dr. Roni Dharma (ID: 4)
             ['id_dokter' => 4, 'hari' => 'Senin', 'jam_mulai' => '07:00:00', 'jam_selesai' => '11:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 4, 'hari' => 'Rabu', 'jam_mulai' => '13:00:00', 'jam_selesai' => '16:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 4, 'hari' => 'Jumat', 'jam_mulai' => '07:00:00', 'jam_selesai' => '11:00:00', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Dr. Yeni Maharani (ID: 5)
             ['id_dokter' => 5, 'hari' => 'Selasa', 'jam_mulai' => '08:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 5, 'hari' => 'Kamis', 'jam_mulai' => '14:00:00', 'jam_selesai' => '17:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 5, 'hari' => 'Sabtu', 'jam_mulai' => '08:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Dr. Hendra Wijaya (ID: 6)
             ['id_dokter' => 6, 'hari' => 'Selasa', 'jam_mulai' => '09:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 6, 'hari' => 'Kamis', 'jam_mulai' => '14:00:00', 'jam_selesai' => '15:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 6, 'hari' => 'Sabtu', 'jam_mulai' => '09:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Dr. Andi Pratama (ID: 7)
+            ['id_dokter' => 7, 'hari' => 'Senin', 'jam_mulai' => '08:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
+            ['id_dokter' => 7, 'hari' => 'Rabu', 'jam_mulai' => '14:00:00', 'jam_selesai' => '17:00:00', 'created_at' => now(), 'updated_at' => now()],
+            ['id_dokter' => 7, 'hari' => 'Jumat', 'jam_mulai' => '08:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 7, 'hari' => 'Minggu', 'jam_mulai' => '10:00:00', 'jam_selesai' => '13:00:00', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        // KUNJUNGAN
+        // =====================================================
+        // 7. SEED KUNJUNGAN (15 records)
+        // =====================================================
         Kunjungan::insert([
             ['id_pasien' => 1, 'id_dokter' => 1, 'tanggal_kunjungan' => '2025-01-10 09:00:00', 'keluhan' => 'Demam dan batuk-batukan', 'diagnosa' => 'Influenza', 'biaya_admin' => 150000.00, 'status' => 'Selesai', 'created_at' => now(), 'updated_at' => now()],
             ['id_pasien' => 2, 'id_dokter' => 1, 'tanggal_kunjungan' => '2025-01-12 10:30:00', 'keluhan' => 'Sakit kepala dan pusing', 'diagnosa' => 'Migrain', 'biaya_admin' => 150000.00, 'status' => 'Selesai', 'created_at' => now(), 'updated_at' => now()],
@@ -265,53 +177,58 @@ class DatabaseSeeder extends Seeder
             ['id_pasien' => 15, 'id_dokter' => 7, 'tanggal_kunjungan' => '2025-02-28 15:00:00', 'keluhan' => 'Flu biasa', 'diagnosa' => 'Common Cold', 'biaya_admin' => 150000.00, 'status' => 'Selesai', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        // RESEP
+        // =====================================================
+        // 8. SEED RESEP (20 records)
+        // =====================================================
         Resep::insert([
+            // Kunjungan 1 (Ahmad - Flu)
             ['id_kunjungan' => 1, 'id_obat' => 1, 'jumlah' => 1, 'aturan_pakai' => 'Minum 3 kali sehari, 1 tablet per kali, sesudah makan, selama 7 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 1, 'id_obat' => 2, 'jumlah' => 1, 'aturan_pakai' => 'Minum 3 kali sehari, 1 tablet per kali, jika demam, selama 3 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 1, 'id_obat' => 7, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 7 hari', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Kunjungan 2 (Siti - Migrain)
             ['id_kunjungan' => 2, 'id_obat' => 2, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, saat nyeri, maksimal 5 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 2, 'id_obat' => 3, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Kunjungan 3 (Budi - Jantung)
             ['id_kunjungan' => 3, 'id_obat' => 5, 'jumlah' => 1, 'aturan_pakai' => 'Minum 1 kali sehari, 1 tablet per kali, pagi hari, selama 1 bulan', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 3, 'id_obat' => 4, 'jumlah' => 1, 'aturan_pakai' => 'Minum 1 kali sehari, 1 tablet per kali, malam hari, selama 1 bulan', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Kunjungan 4 (Dewi - DBD)
             ['id_kunjungan' => 4, 'id_obat' => 1, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 4, 'id_obat' => 7, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 4, 'id_obat' => 8, 'jumlah' => 1, 'aturan_pakai' => 'Minum 1 kali sehari, 1 tablet per kali, pagi hari, selama 3 hari', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Kunjungan 5 (Rudi - Gastroenteritis)
             ['id_kunjungan' => 5, 'id_obat' => 6, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sebelum makan, selama 7 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 5, 'id_obat' => 1, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Kunjungan 6 (Ani - Sakit Gigi)
             ['id_kunjungan' => 6, 'id_obat' => 3, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 6, 'id_obat' => 12, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 3 hari', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Kunjungan 7 (Hariyanto - Konjungtivitis)
             ['id_kunjungan' => 7, 'id_obat' => 11, 'jumlah' => 2, 'aturan_pakai' => 'Diminum 1 kali sehari, 1 tablet per kali, malam hari, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Kunjungan 8 (Nurul - Arthritis)
             ['id_kunjungan' => 8, 'id_obat' => 12, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 10 hari', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Kunjungan 10 (Eka - Bronkitis)
             ['id_kunjungan' => 10, 'id_obat' => 1, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 7 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 10, 'id_obat' => 9, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 7 hari', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Kunjungan 11 (Iwan - Hipertensi)
             ['id_kunjungan' => 11, 'id_obat' => 5, 'jumlah' => 1, 'aturan_pakai' => 'Minum 1 kali sehari, 1 tablet per kali, pagi hari, selama 1 bulan', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Kunjungan 12 (Lisa - Angina)
+            ['id_kunjungan' => 12, 'id_obat' => 5, 'jumlah' => 1, 'aturan_pakai' => 'Minum 1 kali sehari, 1 tablet per kali, pagi hari, selama 1 bulan', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Kunjungan 13 (Setiawan - Malnutrisi)
             ['id_kunjungan' => 13, 'id_obat' => 7, 'jumlah' => 2, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 2 minggu', 'created_at' => now(), 'updated_at' => now()],
+            
+            // Kunjungan 15 (Doni - Common Cold)
+            ['id_kunjungan' => 15, 'id_obat' => 2, 'jumlah' => 1, 'aturan_pakai' => 'Minum 3 kali sehari, 1 tablet per kali, saat demam, selama 3 hari', 'created_at' => now(), 'updated_at' => now()],
+            ['id_kunjungan' => 15, 'id_obat' => 7, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],
         ]);
-
-        $this->command->info('✓ Hospital data created');
-    }
-
-    /**
-     * Print statistics
-     */
-    private function printStats(): void
-    {
-        $this->command->table(
-            ['Entity', 'Records'],
-            [
-                ['Users', User::count()],
-                ['RumahSakit', RumahSakit::count()],
-                ['Poliklinik', Poliklinik::count()],
-                ['Dokter', Dokter::count()],
-                ['Pasien', Pasien::count()],
-                ['Obat', Obat::count()],
-                ['JadwalPraktek', JadwalPraktek::count()],
-                ['Kunjungan', Kunjungan::count()],
-                ['Resep', Resep::count()],
-                ['─────', '─────'],
-                ['TOTAL', User::count() + RumahSakit::count() + Poliklinik::count() + Dokter::count() + Pasien::count() + Obat::count() + JadwalPraktek::count() + Kunjungan::count() + Resep::count()],
-            ]
-        );
     }
 }
