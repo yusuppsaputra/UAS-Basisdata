@@ -40,6 +40,12 @@ class JadwalPraktekResource extends Resource
                             ->searchable()
                             ->preload(),
 
+                        Forms\Components\FileUpload::make('upload_gambar')
+                            ->disk('minio')
+                            ->visibility('public')
+                            ->image()
+                            ->maxSize(2048),
+
                         Forms\Components\Select::make('hari')
                             ->label('Hari')
                             ->options([
@@ -68,6 +74,10 @@ class JadwalPraktekResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('upload_gambar')
+                    ->disk('minio')
+                    ->label('Gambar')
+                    ->rounded(),
                 Tables\Columns\TextColumn::make('dokter.nama_dokter')
                     ->label('Dokter')
                     ->searchable()

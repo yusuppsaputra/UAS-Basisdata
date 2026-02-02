@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
-use Illuminate\Support\Facades\Response;
 
 /* NOTE: Do Not Remove
 / Livewire asset handling if using sub folder in domain

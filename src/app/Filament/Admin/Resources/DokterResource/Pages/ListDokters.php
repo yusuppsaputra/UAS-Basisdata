@@ -4,17 +4,16 @@ namespace App\Filament\Admin\Resources\DokterResource\Pages;
 
 use App\Filament\Admin\Resources\DokterResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ViewRecord;
+use Filament\Resources\Pages\ListRecords;
 
-class ViewDokter extends ViewRecord
+class ListDokters extends ListRecords
 {
     protected static string $resource = DokterResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
-            Actions\DeleteAction::make(),
+            Actions\CreateAction::make(),
         ];
     }
 }

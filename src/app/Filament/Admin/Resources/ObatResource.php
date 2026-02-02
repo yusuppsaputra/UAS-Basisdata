@@ -33,6 +33,12 @@ class ObatResource extends Resource
                 Forms\Components\Section::make('Informasi Obat')
                     ->description('Data obat-obatan dan inventaris')
                     ->schema([
+                        Forms\Components\FileUpload::make('upload_gambar')
+                            ->disk('minio')
+                            ->visibility('public')
+                            ->image()
+                            ->maxSize(2048),
+
                         Forms\Components\TextInput::make('nama_obat')
                             ->label('Nama Obat')
                             ->required()
@@ -71,6 +77,10 @@ class ObatResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('upload_gambar')
+                    ->disk('minio')
+                    ->label('Gambar')
+                    ->rounded(),
                 Tables\Columns\TextColumn::make('nama_obat')
                     ->label('Nama Obat')
                     ->searchable()
@@ -91,7 +101,7 @@ class ObatResource extends Resource
                     ->numeric()
                     ->sortable()
                     ->badge()
-                    ->color(fn($state) => $state < 50 ? 'danger' : 'success'),
+                    ->color(fn ($state) => $state < 50 ? 'danger' : 'success'),
 
                 Tables\Columns\TextColumn::make('harga')
                     ->label('Harga')
@@ -117,7 +127,7 @@ class ObatResource extends Resource
 
                 Tables\Filters\Filter::make('stok_rendah')
                     ->label('Stok < 50')
-                    ->query(fn($query) => $query->where('stok', '<', 50))
+                    ->query(fn ($query) => $query->where('stok', '<', 50))
                     ->toggle(),
             ])
             ->actions([

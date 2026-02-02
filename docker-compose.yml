@@ -44,3 +44,43 @@ services:
     volumes:
       - ./db/conf.d:/etc/mysql/conf.d
       - ./db/data:/var/lib/mysql
+  metabase:
+    image: metabase/metabase:latest
+    container_name: ${COMPOSE_PROJECT_NAME}_metabase
+    hostname: metabase
+    ports:
+      - "3000:3000"
+    environment:
+      # Gunakan database EMBEDDED untuk Metabase (tidak perlu MySQL)
+      MB_DB_TYPE: h2
+      MB_DB_FILE: /metabase-data/metabase.db
+      MB_SITE_NAME: "OBE Curriculum Analytics - ${PROJECT_NAME}"
+      MB_EMOJI_IN_LOGO: false
+    volumes:
+      - ./metabase/data:/metabase-data
+    depends_on:
+      - db
+    healthcheck:
+      test: curl --fail -I http://localhost:3000/api/health || exit 1
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+  minio:
+    image: minio/minio:latest
+    container_name: ${COMPOSE_PROJECT_NAME}_minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - ./minio/data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3

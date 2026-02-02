@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('poliklinik', function (Blueprint $table) {
             $table->id('id_poli');
+            $table->string('upload_gambar')->nullable();
             $table->foreignId('id_rumahsakit')->constrained('rumah_sakit', 'id_rumahsakit')
                 ->onUpdate('cascade')->onDelete('cascade');
             $table->string('nama_poli', 100);

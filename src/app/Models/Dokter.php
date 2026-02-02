@@ -60,4 +60,40 @@ class Dokter extends Model
     {
         return $this->kunjungan();
     }
+
+    /**
+     * Mutator to ensure upload_gambar is stored as a string path.
+     * Handles accidental arrays (defensive) to prevent DB binding errors.
+     */
+    public function setUploadGambarAttribute($value): void
+    {
+        if (is_array($value)) {
+            // If it's a numeric array with a string path, take first
+            if (isset($value[0]) && is_string($value[0])) {
+                $this->attributes['upload_gambar'] = $value[0];
+
+                return;
+            }
+
+            // If associative with common keys
+            if (isset($value['path']) && is_string($value['path'])) {
+                $this->attributes['upload_gambar'] = $value['path'];
+
+                return;
+            }
+
+            if (isset($value['name']) && is_string($value['name'])) {
+                $this->attributes['upload_gambar'] = $value['name'];
+
+                return;
+            }
+
+            // Fallback: null to avoid array-to-string DB errors
+            $this->attributes['upload_gambar'] = null;
+
+            return;
+        }
+
+        $this->attributes['upload_gambar'] = $value;
+    }
 }

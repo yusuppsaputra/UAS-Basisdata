@@ -68,13 +68,13 @@ class DatabaseSeeder extends Seeder
 
         // Assign permissions to roles
         $superAdminRole->syncPermissions($permissions);
-        
-        $adminPermissions = array_filter($permissions, fn($p) => !str_starts_with($p, 'view_users'));
+
+        $adminPermissions = array_filter($permissions, fn ($p) => ! str_starts_with($p, 'view_users'));
         $adminRole->syncPermissions($adminPermissions);
-        
-        $userPermissions = array_filter($permissions, fn($p) => str_starts_with($p, 'view_'));
+
+        $userPermissions = array_filter($permissions, fn ($p) => str_starts_with($p, 'view_'));
         $userRole->syncPermissions($userPermissions);
-        
+
         $doctorPermissions = ['view_dokter', 'view_jadwal_praktek', 'view_kunjungan', 'edit_kunjungan', 'view_resep', 'create_resep', 'edit_resep'];
         $doctorRole->syncPermissions($doctorPermissions);
 

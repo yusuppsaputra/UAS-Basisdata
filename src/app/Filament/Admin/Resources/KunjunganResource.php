@@ -69,6 +69,12 @@ class KunjunganResource extends Resource
                             ->step(0.01)
                             ->prefix('Rp'),
 
+                        Forms\Components\FileUpload::make('upload_gambar')
+                            ->disk('minio')
+                            ->visibility('public')
+                            ->image()
+                            ->maxSize(2048),
+
                         Forms\Components\Select::make('status')
                             ->label('Status')
                             ->options([
@@ -85,6 +91,10 @@ class KunjunganResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('upload_gambar')
+                    ->disk('minio')
+                    ->label('Gambar')
+                    ->rounded(),
                 Tables\Columns\TextColumn::make('pasien.nama')
                     ->label('Pasien')
                     ->searchable()
@@ -163,11 +173,11 @@ class KunjunganResource extends Resource
                         return $query
                             ->when(
                                 $data['tanggal_dari'],
-                                fn($q, $date) => $q->whereDate('tanggal_kunjungan', '>=', $date),
+                                fn ($q, $date) => $q->whereDate('tanggal_kunjungan', '>=', $date),
                             )
                             ->when(
                                 $data['tanggal_sampai'],
-                                fn($q, $date) => $q->whereDate('tanggal_kunjungan', '<=', $date),
+                                fn ($q, $date) => $q->whereDate('tanggal_kunjungan', '<=', $date),
                             );
                     }),
             ])

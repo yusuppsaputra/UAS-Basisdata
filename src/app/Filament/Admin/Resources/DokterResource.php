@@ -14,11 +14,11 @@ class DokterResource extends Resource
 {
     protected static ?string $model = Dokter::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Dokter';
     protected static ?string $modelLabel = 'Dokter';
     protected static ?string $pluralModelLabel = 'Dokter';
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 3;
     protected static ?string $navigationGroup = 'Hospital Management';
 
     public static function canAccess(): bool
@@ -30,117 +30,88 @@ class DokterResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Informasi Dokter')
-                    ->description('Data pribadi dan profesional dokter')
-                    ->schema([
-                        Forms\Components\Select::make('id_rumahsakit')
-                            ->label('Rumah Sakit')
-                            ->relationship('rumahSakit', 'nama')
-                            ->required()
-                            ->searchable()
-                            ->preload(),
-
-                        Forms\Components\Select::make('id_poli')
-                            ->label('Poliklinik')
-                            ->relationship('poliklinik', 'nama_poli')
-                            ->required()
-                            ->searchable()
-                            ->preload(),
-
-                        Forms\Components\TextInput::make('nama_dokter')
-                            ->label('Nama Dokter')
-                            ->required()
-                            ->maxLength(100),
-
-                        Forms\Components\TextInput::make('spesialisasi')
-                            ->label('Spesialisasi')
-                            ->required()
-                            ->maxLength(100)
-                            ->placeholder('Contoh: Umum, Jantung, Anak, dll'),
-                    ])->columns(2),
-
-                Forms\Components\Section::make('Data Registrasi & Kontak')
-                    ->description('Nomor STR dan kontak dokter')
-                    ->schema([
-                        Forms\Components\TextInput::make('no_str')
-                            ->label('Nomor STR')
-                            ->required()
-                            ->maxLength(20)
-                            ->unique(ignoreRecord: true)
-                            ->placeholder('Contoh: STR001-2023'),
-
-                        Forms\Components\TextInput::make('no_telepon')
-                            ->label('Nomor Telepon')
-                            ->required()
-                            ->tel()
-                            ->maxLength(20),
-                    ])->columns(2),
+                Forms\Components\TextInput::make('id_rumahsakit')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('id_poli')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('nama_dokter')
+                    ->required()
+                    ->maxLength(100),
+                Forms\Components\TextInput::make('spesialisasi')
+                    ->required()
+                    ->maxLength(100),
+                Forms\Components\TextInput::make('no_str')
+                    ->required()
+                    ->unique()
+                    ->maxLength(20),
+                Forms\Components\TextInput::make('no_telepon')
+                    ->tel()
+                    ->required()
+                    ->maxLength(15),
+                Forms\Components\FileUpload::make('upload_gambar')
+                    ->label('Upload Gambar')
+                    ->disk('public')
+                    ->directory('dokter')
+                    ->visibility('public')
+                    ->image()
+                    ->required()
+                    ->maxSize(2048)
+                    ->imagePreviewHeight('100')->helperText('Tunggu sampai pratinjau gambar muncul sebelum klik "Create". Gambar wajib diunggah.')->saveUploadedFileUsing(function (\Illuminate\Http\UploadedFile $file, $state) {
+                        // Store file on public disk under 'dokter' and return the stored path
+                        return \Illuminate\Support\Facades\Storage::disk('public')->putFile('dokter', $file);
+                    })
+                    ->columnSpan('full'),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('nama_dokter')
-                    ->label('Nama Dokter')
-                    ->searchable()
-                    ->sortable()
-                    ->weight('bold'),
-
-                Tables\Columns\TextColumn::make('spesialisasi')
-                    ->label('Spesialisasi')
-                    ->badge()
-                    ->color('info')
-                    ->searchable(),
-
                 Tables\Columns\TextColumn::make('rumahSakit.nama')
                     ->label('Rumah Sakit')
                     ->searchable()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('poliklinik.nama_poli')
+                    ->sortable()
+                    ->weight('bold'),
+                Tables\Columns\TextColumn::make('poliklinik.nama')
                     ->label('Poliklinik')
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('no_str')
-                    ->label('No. STR')
                     ->searchable()
-                    ->copyable(),
+                    ->sortable(),
+                Tables\Columns\ImageColumn::make('upload_gambar')
+                    ->disk('public')
+                    ->label('Gambar')
+                    ->rounded()
+                    ->getStateUsing(fn ($record) => (
+                        ($path = $record->upload_gambar) && \Illuminate\Support\Facades\Storage::disk('public')->exists($path)
+                        ? $path
+                        : 'dokter/placeholder.png'
+                    )),
 
-                Tables\Columns\TextColumn::make('no_telepon')
-                    ->label('Telepon')
+                Tables\Columns\TextColumn::make('nama_dokter')
                     ->searchable(),
-
-                Tables\Columns\TextColumn::make('kunjungan_count')
-                    ->label('Kunjungan')
-                    ->counts('kunjungan')
-                    ->badge()
-                    ->color('success'),
-
+                Tables\Columns\TextColumn::make('spesialisasi')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('no_str')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('no_telepon')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Dibuat')
-                    ->dateTime('d M Y H:i')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('spesialisasi')
-                    ->label('Spesialisasi')
-                    ->options(Dokter::distinct()->pluck('spesialisasi', 'spesialisasi')->toArray()),
-
-                Tables\Filters\SelectFilter::make('id_rumahsakit')
-                    ->label('Rumah Sakit')
-                    ->relationship('rumahSakit', 'nama'),
-
-                Tables\Filters\SelectFilter::make('id_poli')
-                    ->label('Poliklinik')
-                    ->relationship('poliklinik', 'nama_poli'),
+                //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -159,7 +130,9 @@ class DokterResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDokter::route('/'),
+            'index' => Pages\ListDokters::route('/'),
+            'create' => Pages\CreateDokter::route('/create'),
+            'edit' => Pages\EditDokter::route('/{record}/edit'),
         ];
     }
 }

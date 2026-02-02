@@ -11,6 +11,9 @@ class CreatePoliklinik extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index');
+        // Use session flash because notify() is not available on this Page class
+        session()->flash('success', 'Poliklinik berhasil dibuat.');
+
+        return static::getResource()::getUrl('index');
     }
 }

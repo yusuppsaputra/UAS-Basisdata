@@ -4,17 +4,16 @@ namespace App\Filament\Admin\Resources\PoliklinikResource\Pages;
 
 use App\Filament\Admin\Resources\PoliklinikResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ViewRecord;
+use Filament\Resources\Pages\ListRecords;
 
-class ViewPoliklinik extends ViewRecord
+class ListPolikliniks extends ListRecords
 {
     protected static string $resource = PoliklinikResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
-            Actions\DeleteAction::make(),
+            Actions\CreateAction::make(),
         ];
     }
 }

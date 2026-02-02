@@ -41,6 +41,13 @@ class PasienResource extends Resource
                             ->placeholder('16 digit nomor identitas')
                             ->columnSpan('full'),
 
+                        Forms\Components\FileUpload::make('upload_gambar')
+                            ->disk('minio')
+                            ->visibility('public')
+                            ->image()
+                            ->maxSize(2048)
+                            ->columnSpan('full'),
+
                         Forms\Components\TextInput::make('nama')
                             ->label('Nama Lengkap')
                             ->required()
@@ -100,6 +107,10 @@ class PasienResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('upload_gambar')
+                    ->disk('minio')
+                    ->label('Gambar')
+                    ->rounded(),
                 Tables\Columns\TextColumn::make('nik')
                     ->label('NIK')
                     ->searchable()
@@ -115,7 +126,7 @@ class PasienResource extends Resource
                 Tables\Columns\TextColumn::make('jenis_kelamin')
                     ->label('Kelamin')
                     ->badge()
-                    ->color(fn($state) => $state === 'Laki-laki' ? 'info' : 'danger'),
+                    ->color(fn ($state) => $state === 'Laki-laki' ? 'info' : 'danger'),
 
                 Tables\Columns\TextColumn::make('tanggal_lahir')
                     ->label('Tanggal Lahir')
@@ -177,17 +188,17 @@ class PasienResource extends Resource
                         return $query
                             ->when(
                                 $data['tanggal_lahir_dari'],
-                                fn($q, $date) => $q->whereDate('tanggal_lahir', '>=', $date),
+                                fn ($q, $date) => $q->whereDate('tanggal_lahir', '>=', $date),
                             )
                             ->when(
                                 $data['tanggal_lahir_sampai'],
-                                fn($q, $date) => $q->whereDate('tanggal_lahir', '<=', $date),
+                                fn ($q, $date) => $q->whereDate('tanggal_lahir', '<=', $date),
                             );
                     }),
 
                 Tables\Filters\Filter::make('memiliki_alergi')
                     ->label('Memiliki Alergi')
-                    ->query(fn($query) => $query->whereNotNull('alergi'))
+                    ->query(fn ($query) => $query->whereNotNull('alergi'))
                     ->toggle(),
             ])
             ->actions([

@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\PoliklinikResource\Pages;
 use App\Models\Poliklinik;
+use App\Models\RumahSakit;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -18,7 +19,7 @@ class PoliklinikResource extends Resource
     protected static ?string $navigationLabel = 'Poliklinik';
     protected static ?string $modelLabel = 'Poliklinik';
     protected static ?string $pluralModelLabel = 'Poliklinik';
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 4;
     protected static ?string $navigationGroup = 'Hospital Management';
 
     public static function canAccess(): bool
@@ -30,94 +31,75 @@ class PoliklinikResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Informasi Poliklinik')
-                    ->description('Data departemen/klinik dalam rumah sakit')
-                    ->schema([
-                        Forms\Components\Select::make('id_rumahsakit')
-                            ->label('Rumah Sakit')
-                            ->relationship('rumahSakit', 'nama')
-                            ->required()
-                            ->searchable()
-                            ->preload(),
-
-                        Forms\Components\TextInput::make('nama_poli')
-                            ->label('Nama Poliklinik')
-                            ->required()
-                            ->maxLength(100)
-                            ->placeholder('Contoh: Poli Umum, Poli Jantung, dll'),
-
-                        Forms\Components\TextInput::make('lantai')
-                            ->label('Lantai')
-                            ->required()
-                            ->numeric()
-                            ->minValue(1),
-
-                        Forms\Components\TextInput::make('jam_operasional')
-                            ->label('Jam Operasional')
-                            ->required()
-                            ->maxLength(50)
-                            ->placeholder('Contoh: 08:00-17:00'),
-                    ])->columns(2),
+                Forms\Components\FileUpload::make('upload_gambar')
+                    ->disk('public')
+                    ->visibility('public')
+                    ->image()
+                    ->maxSize(2048),
+                (RumahSakit::count() <= 15
+                    ? Forms\Components\Radio::make('id_rumahsakit')
+                        ->label('Rumah Sakit')
+                        ->options(fn () => RumahSakit::pluck('nama', 'id_rumahsakit')->toArray())
+                        ->required()
+                        ->inline()
+                        ->columnSpan('full')
+                    : Forms\Components\Select::make('id_rumahsakit')
+                        ->label('Rumah Sakit')
+                        ->options(fn () => RumahSakit::pluck('nama', 'id_rumahsakit')->toArray())
+                        ->placeholder('Pilih Rumah Sakit')
+                        ->helperText('Klik untuk membuka daftar dan pilih Rumah Sakit (ketik untuk memfilter).')
+                        ->required()
+                        ->preload()
+                        ->searchable()
+                        ->columnSpan('full')
+                ),
+                Forms\Components\TextInput::make('nama_poli')
+                    ->required()
+                    ->maxLength(100),
+                Forms\Components\TextInput::make('lantai')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('jam_operasional')
+                    ->required()
+                    ->maxLength(100),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
+                Tables\Columns\ImageColumn::make('upload_gambar')
+                    ->disk('public')
+                    ->label('Gambar')
+                    ->rounded(),
                 Tables\Columns\TextColumn::make('rumahSakit.nama')
                     ->label('Rumah Sakit')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
-
                 Tables\Columns\TextColumn::make('nama_poli')
-                    ->label('Nama Poliklinik')
-                    ->searchable()
-                    ->sortable(),
-
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('lantai')
-                    ->label('Lantai')
                     ->numeric()
                     ->sortable(),
-
                 Tables\Columns\TextColumn::make('jam_operasional')
-                    ->label('Jam Operasional'),
-
-                Tables\Columns\TextColumn::make('dokter_count')
-                    ->label('Dokter')
-                    ->counts('dokter')
-                    ->badge()
-                    ->color('success'),
-
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Dibuat')
-                    ->dateTime('d M Y H:i')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('id_rumahsakit')
-                    ->label('Rumah Sakit')
-                    ->relationship('rumahSakit', 'nama'),
-
-                Tables\Filters\Filter::make('lantai')
-                    ->form([
-                        Forms\Components\TextInput::make('lantai')
-                            ->label('Lantai')
-                            ->numeric(),
-                    ])
-                    ->query(function ($query, array $data) {
-                        return $query->when(
-                            $data['lantai'],
-                            fn($q, $lantai) => $q->where('lantai', $lantai),
-                        );
-                    }),
+                //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -136,7 +118,9 @@ class PoliklinikResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPoliklinik::route('/'),
+            'index' => Pages\ListPolikliniks::route('/'),
+            'create' => Pages\CreatePoliklinik::route('/create'),
+            'edit' => Pages\EditPoliklinik::route('/{record}/edit'),
         ];
     }
 }

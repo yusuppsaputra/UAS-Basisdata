@@ -36,7 +36,7 @@ class ResepResource extends Resource
                         Forms\Components\Select::make('id_kunjungan')
                             ->label('Kunjungan')
                             ->relationship('kunjungan', 'id')
-                            ->getOptionLabelFromRecordUsing(fn($record) => "Kunjungan #{$record->id} - {$record->pasien->nama}")
+                            ->getOptionLabelFromRecordUsing(fn ($record) => "Kunjungan #{$record->id} - {$record->pasien->nama}")
                             ->required()
                             ->searchable()
                             ->preload(),
@@ -59,6 +59,12 @@ class ResepResource extends Resource
                             ->required()
                             ->rows(3)
                             ->placeholder('Contoh: Minum 3 kali sehari, 1 tablet per kali, setelah makan, selama 7 hari'),
+
+                        Forms\Components\FileUpload::make('upload_gambar')
+                            ->disk('minio')
+                            ->visibility('public')
+                            ->image()
+                            ->maxSize(2048),
                     ])->columns(2),
             ]);
     }
@@ -67,6 +73,10 @@ class ResepResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('upload_gambar')
+                    ->disk('minio')
+                    ->label('Gambar')
+                    ->rounded(),
                 Tables\Columns\TextColumn::make('kunjungan.pasien.nama')
                     ->label('Pasien')
                     ->searchable()

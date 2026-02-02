@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('rumah_sakit', function (Blueprint $table) {
             $table->id('id_rumahsakit');
+            $table->string('upload_gambar')->nullable();
             $table->string('nama', 100);
             $table->string('alamat', 255);
             $table->string('kota', 50);

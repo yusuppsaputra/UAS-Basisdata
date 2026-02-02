@@ -10,7 +10,6 @@ use App\Models\Pasien;
 use App\Models\Poliklinik;
 use App\Models\Resep;
 use App\Models\RumahSakit;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class HospitalSeeder extends Seeder
@@ -122,33 +121,33 @@ class HospitalSeeder extends Seeder
             ['id_dokter' => 1, 'hari' => 'Senin', 'jam_mulai' => '08:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 1, 'hari' => 'Rabu', 'jam_mulai' => '14:00:00', 'jam_selesai' => '17:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 1, 'hari' => 'Jumat', 'jam_mulai' => '08:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Dr. Budi Santoso (ID: 2)
             ['id_dokter' => 2, 'hari' => 'Selasa', 'jam_mulai' => '08:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 2, 'hari' => 'Kamis', 'jam_mulai' => '13:00:00', 'jam_selesai' => '15:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 2, 'hari' => 'Sabtu', 'jam_mulai' => '09:00:00', 'jam_selesai' => '13:00:00', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Dr. Siti Nurhaliza (ID: 3)
             ['id_dokter' => 3, 'hari' => 'Senin', 'jam_mulai' => '09:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 3, 'hari' => 'Selasa', 'jam_mulai' => '14:00:00', 'jam_selesai' => '17:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 3, 'hari' => 'Kamis', 'jam_mulai' => '09:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 3, 'hari' => 'Jumat', 'jam_mulai' => '14:00:00', 'jam_selesai' => '17:00:00', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Dr. Roni Dharma (ID: 4)
             ['id_dokter' => 4, 'hari' => 'Senin', 'jam_mulai' => '07:00:00', 'jam_selesai' => '11:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 4, 'hari' => 'Rabu', 'jam_mulai' => '13:00:00', 'jam_selesai' => '16:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 4, 'hari' => 'Jumat', 'jam_mulai' => '07:00:00', 'jam_selesai' => '11:00:00', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Dr. Yeni Maharani (ID: 5)
             ['id_dokter' => 5, 'hari' => 'Selasa', 'jam_mulai' => '08:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 5, 'hari' => 'Kamis', 'jam_mulai' => '14:00:00', 'jam_selesai' => '17:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 5, 'hari' => 'Sabtu', 'jam_mulai' => '08:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Dr. Hendra Wijaya (ID: 6)
             ['id_dokter' => 6, 'hari' => 'Selasa', 'jam_mulai' => '09:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 6, 'hari' => 'Kamis', 'jam_mulai' => '14:00:00', 'jam_selesai' => '15:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 6, 'hari' => 'Sabtu', 'jam_mulai' => '09:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Dr. Andi Pratama (ID: 7)
             ['id_dokter' => 7, 'hari' => 'Senin', 'jam_mulai' => '08:00:00', 'jam_selesai' => '12:00:00', 'created_at' => now(), 'updated_at' => now()],
             ['id_dokter' => 7, 'hari' => 'Rabu', 'jam_mulai' => '14:00:00', 'jam_selesai' => '17:00:00', 'created_at' => now(), 'updated_at' => now()],
@@ -185,47 +184,47 @@ class HospitalSeeder extends Seeder
             ['id_kunjungan' => 1, 'id_obat' => 1, 'jumlah' => 1, 'aturan_pakai' => 'Minum 3 kali sehari, 1 tablet per kali, sesudah makan, selama 7 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 1, 'id_obat' => 2, 'jumlah' => 1, 'aturan_pakai' => 'Minum 3 kali sehari, 1 tablet per kali, jika demam, selama 3 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 1, 'id_obat' => 7, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 7 hari', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Kunjungan 2 (Siti - Migrain)
             ['id_kunjungan' => 2, 'id_obat' => 2, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, saat nyeri, maksimal 5 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 2, 'id_obat' => 3, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Kunjungan 3 (Budi - Jantung)
             ['id_kunjungan' => 3, 'id_obat' => 5, 'jumlah' => 1, 'aturan_pakai' => 'Minum 1 kali sehari, 1 tablet per kali, pagi hari, selama 1 bulan', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 3, 'id_obat' => 4, 'jumlah' => 1, 'aturan_pakai' => 'Minum 1 kali sehari, 1 tablet per kali, malam hari, selama 1 bulan', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Kunjungan 4 (Dewi - DBD)
             ['id_kunjungan' => 4, 'id_obat' => 1, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 4, 'id_obat' => 7, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 4, 'id_obat' => 8, 'jumlah' => 1, 'aturan_pakai' => 'Minum 1 kali sehari, 1 tablet per kali, pagi hari, selama 3 hari', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Kunjungan 5 (Rudi - Gastroenteritis)
             ['id_kunjungan' => 5, 'id_obat' => 6, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sebelum makan, selama 7 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 5, 'id_obat' => 1, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Kunjungan 6 (Ani - Sakit Gigi)
             ['id_kunjungan' => 6, 'id_obat' => 3, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 6, 'id_obat' => 12, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 3 hari', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Kunjungan 7 (Hariyanto - Konjungtivitis)
             ['id_kunjungan' => 7, 'id_obat' => 11, 'jumlah' => 2, 'aturan_pakai' => 'Diminum 1 kali sehari, 1 tablet per kali, malam hari, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Kunjungan 8 (Nurul - Arthritis)
             ['id_kunjungan' => 8, 'id_obat' => 12, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 10 hari', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Kunjungan 10 (Eka - Bronkitis)
             ['id_kunjungan' => 10, 'id_obat' => 1, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 7 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 10, 'id_obat' => 9, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 7 hari', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Kunjungan 11 (Iwan - Hipertensi)
             ['id_kunjungan' => 11, 'id_obat' => 5, 'jumlah' => 1, 'aturan_pakai' => 'Minum 1 kali sehari, 1 tablet per kali, pagi hari, selama 1 bulan', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Kunjungan 12 (Lisa - Angina)
             ['id_kunjungan' => 12, 'id_obat' => 5, 'jumlah' => 1, 'aturan_pakai' => 'Minum 1 kali sehari, 1 tablet per kali, pagi hari, selama 1 bulan', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Kunjungan 13 (Setiawan - Malnutrisi)
             ['id_kunjungan' => 13, 'id_obat' => 7, 'jumlah' => 2, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 2 minggu', 'created_at' => now(), 'updated_at' => now()],
-            
+
             // Kunjungan 15 (Doni - Common Cold)
             ['id_kunjungan' => 15, 'id_obat' => 2, 'jumlah' => 1, 'aturan_pakai' => 'Minum 3 kali sehari, 1 tablet per kali, saat demam, selama 3 hari', 'created_at' => now(), 'updated_at' => now()],
             ['id_kunjungan' => 15, 'id_obat' => 7, 'jumlah' => 1, 'aturan_pakai' => 'Minum 2 kali sehari, 1 tablet per kali, sesudah makan, selama 5 hari', 'created_at' => now(), 'updated_at' => now()],

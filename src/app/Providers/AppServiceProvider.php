@@ -9,6 +9,8 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\VerticalAlignment;
+use Illuminate\Auth\Events\Logout;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\ValidationException;
@@ -41,6 +43,19 @@ class AppServiceProvider extends ServiceProvider
         };
         MountableAction::configureUsing(function (MountableAction $action) {
             $action->modalFooterActionsAlignment(Alignment::Right);
+        });
+
+        // Listen for Logout event and create an Access activity entry
+        Event::listen(Logout::class, function (Logout $event) {
+            if ($event->user) {
+                activity('Access')
+                    ->causedBy($event->user)
+                    ->withProperties([
+                        'ip' => request()->ip(),
+                        'user_agent' => request()->userAgent(),
+                    ])
+                    ->log("{$event->user->name} logged out");
+            }
         });
     }
 }
