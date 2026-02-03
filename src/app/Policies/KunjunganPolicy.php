@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Kunjungan;
 use App\Models\User;
+use App\Models\Kunjungan;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class KunjunganPolicy

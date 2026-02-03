@@ -32,10 +32,13 @@ class PoliklinikResource extends Resource
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('upload_gambar')
-                    ->disk('public')
+                    ->disk('minio')
+                    ->directory('poliklinik')
                     ->visibility('public')
                     ->image()
-                    ->maxSize(2048),
+                    ->imagePreviewHeight(100)
+                    ->maxSize(2048)
+                    ->preserveFilenames(false),
                 (RumahSakit::count() <= 15
                     ? Forms\Components\Radio::make('id_rumahsakit')
                         ->label('Rumah Sakit')
@@ -71,7 +74,7 @@ class PoliklinikResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\ImageColumn::make('upload_gambar')
-                    ->disk('public')
+                    ->disk('minio')
                     ->label('Gambar')
                     ->rounded(),
                 Tables\Columns\TextColumn::make('rumahSakit.nama')

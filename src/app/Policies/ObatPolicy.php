@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Obat;
 use App\Models\User;
+use App\Models\Obat;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ObatPolicy

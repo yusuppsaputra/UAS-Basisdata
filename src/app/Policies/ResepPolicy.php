@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Resep;
 use App\Models\User;
+use App\Models\Resep;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ResepPolicy

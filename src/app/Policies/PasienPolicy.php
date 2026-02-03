@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Pasien;
 use App\Models\User;
+use App\Models\Pasien;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PasienPolicy

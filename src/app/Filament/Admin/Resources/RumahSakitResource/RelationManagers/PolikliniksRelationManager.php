@@ -20,9 +20,12 @@ class PolikliniksRelationManager extends RelationManager
             ->schema([
                 Forms\Components\FileUpload::make('upload_gambar')
                     ->disk('minio')
+                    ->directory('poliklinik')
                     ->visibility('public')
                     ->image()
-                    ->maxSize(2048),
+                    ->imagePreviewHeight(100)
+                    ->maxSize(2048)
+                    ->preserveFilenames(false),
 
                 Forms\Components\TextInput::make('nama_poli')
                     ->label('Nama Poliklinik')

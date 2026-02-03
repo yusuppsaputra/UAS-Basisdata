@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\JadwalPraktek;
 use App\Models\User;
+use App\Models\JadwalPraktek;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class JadwalPraktekPolicy

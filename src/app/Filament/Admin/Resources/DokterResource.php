@@ -52,15 +52,17 @@ class DokterResource extends Resource
                     ->maxLength(15),
                 Forms\Components\FileUpload::make('upload_gambar')
                     ->label('Upload Gambar')
-                    ->disk('public')
+                    ->disk('minio')
                     ->directory('dokter')
                     ->visibility('public')
                     ->image()
-                    ->required()
+                    ->imagePreviewHeight(100)
                     ->maxSize(2048)
-                    ->imagePreviewHeight('100')->helperText('Tunggu sampai pratinjau gambar muncul sebelum klik "Create". Gambar wajib diunggah.')->saveUploadedFileUsing(function (\Illuminate\Http\UploadedFile $file, $state) {
-                        // Store file on public disk under 'dokter' and return the stored path
-                        return \Illuminate\Support\Facades\Storage::disk('public')->putFile('dokter', $file);
+                    ->required()
+                    ->preserveFilenames(false)
+                    ->saveUploadedFileUsing(function (\Illuminate\Http\UploadedFile $file, $state) {
+                        // Store file on MinIO under 'dokter' and return the stored path
+                        return \Illuminate\Support\Facades\Storage::disk('minio')->putFile('dokter', $file);
                     })
                     ->columnSpan('full'),
             ]);
@@ -81,14 +83,34 @@ class DokterResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('upload_gambar')
-                    ->disk('public')
+                    ->disk('minio')
                     ->label('Gambar')
                     ->rounded()
-                    ->getStateUsing(fn ($record) => (
-                        ($path = $record->upload_gambar) && \Illuminate\Support\Facades\Storage::disk('public')->exists($path)
-                        ? $path
-                        : 'dokter/placeholder.png'
-                    )),
+                    ->getStateUsing(function ($record) {
+                        $path = $record->upload_gambar ?? null;
+
+                        if (! $path) {
+                            return null;
+                        }
+
+                        // If a full URL was stored, return it directly
+                        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+                            return $path;
+                        }
+
+                        // Prefer MinIO if file exists there
+                        if (\Illuminate\Support\Facades\Storage::disk('minio')->exists($path)) {
+                            return $path;
+                        }
+
+                        // Fallback to public disk if present; return full URL
+                        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+                            return \Illuminate\Support\Facades\Storage::disk('public')->url($path);
+                        }
+
+                        return null;
+                    }),
+
 
                 Tables\Columns\TextColumn::make('nama_dokter')
                     ->searchable(),
