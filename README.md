@@ -12,8 +12,8 @@ User
 Service Lanjutan Metabase & Minio
 Metabase
 Metabase User Login
-Email : fcpanjul6@gmail.com
-Password : akusigit11
+Email : yusuppsaputra935@student.esaunggul.ac.id
+Password : Esaunggul123
 Contoh membuat visualisasi di metabase
 Login
 Kunjungi halaman http://localhost:3000/ dan login menggunakan akun di atas.
@@ -85,3 +85,4 @@ Disini saya mengatur max size gambar yang di upload 2MB.
 
 Terimakasih
 Mungkin ini terkait UAS tentang materi lanjutan yaitu Metabase dengan visualisasi dan Minio dengan menampilkan / mengupload gambar.
+
